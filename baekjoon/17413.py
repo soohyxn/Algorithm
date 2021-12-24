@@ -1,27 +1,23 @@
-s=list(input())
-tag=False
-word=''
-result=''
-for i in s:
-  #뒤집어서 출력
-  if tag==False:
-    if i=='<':
-      tag=True
-      word=word+i
-    #중간점검
-    elif i==' ':
-      word=word+i
-      result=result+word
-      word=''
+S = input()
+flag = False # 태그 확인 여부
+word = ''
+answer = ''
+
+for s in S:
+    if flag == False:
+        if s == '<':
+            flag = True
+            word += s
+        elif s == ' ': # 중간 저장
+            word += s
+            answer += word
+            word = ''
+        else: # 뒤집어서 저장
+            word = s + word
     else:
-      word=i+word
-
-  #정상적으로 출력
-  elif tag==True:
-    word=word+i
-    if i=='>':
-      tag=False
-      result=result+word
-      word=''
-
-print(result+word)
+        word += s
+        if s == '>':
+            flag = False
+            answer += word
+            word = ''
+print(answer + word)
