@@ -7,7 +7,7 @@ dx, dy = [0, 0, 1, -1], [1, -1, 0, 0] # 동서남북
 def bfs(i, j):
     queue = deque([[i, j, 0]])
     visited = [[[0, 0] for _ in range(m)] for _ in range(n)] # 방문 확인 리스트
-    visited[i][j][0] = 1 # 시작점 벽을 안 부순 상태로 시작
+    visited[i][j][0] = 1 # 시작점은 벽을 안 부순 상태로 시작
 
     while queue:
         x, y, w = queue.popleft()
