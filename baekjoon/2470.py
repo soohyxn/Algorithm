@@ -2,21 +2,22 @@ n = int(input())
 sol = list(map(int, input().split()))
 sol.sort()
 
-left, right = 0, n-1
-result = sol[left] + sol[right]
-al, ar = left, right
+l, r = 0, n-1
+result = sol[l] + sol[r]
+al, ar = l, r
 
-while left < right:
-    s = sol[left] + sol[right]
+while l < r:
+    mix = sol[l] + sol[r]
 
-    if abs(s) < abs(result):
-        result = s
-        al = left
-        ar = right
+    if abs(mix) < abs(result):
+        result = mix
+        al, ar = l, r
 
-    if s < 0:
-        left += 1
+    if mix == 0:
+        break
+    elif mix < 0:
+        l += 1
     else:
-        right -= 1
+        r -= 1
 
 print(sol[al], sol[ar])
