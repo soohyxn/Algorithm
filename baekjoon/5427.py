@@ -34,11 +34,11 @@ for _ in range(t):
 
         for j in range(w):
             if board[i][j] == '@':
-                queue.append([i, j])
-                board[i][j] = '.'
+                start = [i, j]
                 visited[i][j] = 0
             elif board[i][j] == '*':
                 queue.append([i, j])
                 visited[i][j] = '*'
 
+    queue.append(start)
     print(bfs())
