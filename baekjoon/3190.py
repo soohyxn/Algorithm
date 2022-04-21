@@ -2,39 +2,47 @@ from collections import deque
 
 N = int(input())
 K = int(input())
-graph = [[0] * N for _ in range(N)] #
-# 사과 위치는 1로
+board = [[0] * N for _ in range(N)]
+
 for _ in range(K):
     x, y = map(int, input().split())
-    graph[x-1][y-1] = 1
-L = int(input())
-times = {} 
-for _ in range(L):
-    x, c = input().split()
-    times[int(x)] = c
+    board[x-1][y-1] = 1 # 사과 위치는 1로
 
-dx, dy = [-1, 0, 1, 0], [0, 1, 0, -1] # 북, 동, 남, 서
-direction = 1 # 초기 방향 - 동쪽
-time = 1 # 시간
-x, y = 0, 0 # 초기 위치
-visited = deque([[x, y]]) # 방문 위치
-graph[x][y] = 2 # 뱀의 위치는 2로
+L = int(input())
+turn = {}
+
+for _ in range(L):
+    t, d = input().split()
+    turn[int(t)] = d
+
+dx, dy = [0, 1, 0, -1], [1, 0, -1, 0] # 동남서북
+x, y, dir = 0, 0, 0 # 시작 위치, 방향(동쪽)
+snake = deque([[x, y]]) # 뱀의 위치
+board[x][y] = 2 # 뱀의 위치는 2로
+ans = 1 # 게임 시간
 
 while True:
-    x, y = x + dx[direction], y + dy[direction] # 이동할 머리 위치
-    if x < 0 or x >= N or y < 0 or y >= N or graph[x][y] == 2: # 이동할 수 없거나 자기 자신과 부딛히는 경우 게임을 끝낸다
-        break
-    else:
-        if graph[x][y] == 0: # 이동할 위치가 사과라면 꼬리 제거
-            vx, vy = visited.popleft()
-            graph[vx][vy] = 0
-        graph[x][y] = 2 # 머리 위치를 2로
-        visited.append([x, y])
-        if time in times.keys(): # 방향을 바꿀 시간이면 방향을 바꾼다
-            if times[time] == 'L':
-                direction = (direction + 3) % 4
-            else:
-                direction = (direction + 1) % 4
-        time += 1
+    # 이동할 머리 위치
+    x = x + dx[dir]
+    y = y + dy[dir]
 
-print(time)
+    if x < 0 or x >= N or y < 0 or y >= N or board[x][y] == 2: # 벽이거나 자기 자신과 부딛히는 경우 게임 종료
+        break
+
+    if board[x][y] == 0: # 이동한 칸에 사과가 없다면 꼬리 제거
+        tx, ty = snake.popleft()
+        board[tx][ty] = 0
+    # 머리 이동
+    board[x][y] = 2
+    snake.append([x, y])
+
+    # 방향을 바꿀 시간이면 방향을 바꾼다
+    if ans in turn.keys():
+        if turn[ans] == 'L':
+            dir = (dir + 3) % 4
+        else:
+            dir = (dir + 1) % 4
+
+    ans += 1
+
+print(ans)
