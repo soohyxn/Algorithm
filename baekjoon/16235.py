@@ -3,7 +3,7 @@ from collections import deque
 n, m, k = map(int, input().split())
 a = [list(map(int, input().split())) for _ in range(n)]
 tree = [[deque() for _ in range(n)] for _ in range(n)] # 위치별 나무 리스트
-nour = [[5] * n for _ in range(n)] # 위치별 양불 리스트
+nour = [[5] * n for _ in range(n)] # 위치별 양분 리스트
 dx, dy = [0, 1, 1, 1, 0, -1, -1, -1], [1, 1, 0, -1, -1, -1, 0, 1] # 동, 동남, 남, 남서, 서, 서북, 북, 북동
 
 for _ in range(m):
