@@ -26,8 +26,8 @@ def diff():
                     ny = y + dy[i]
                     # 범위를 벗어나지 않으며 청소기가 아닌 경우 확산될 미세먼지 양을 구한다
                     if 0 <= nx < R and 0 <= ny < C and graph[nx][ny] != -1:
-                            dust[nx][ny] += d
-                            dust[x][y] -= d
+                        dust[nx][ny] += d
+                        dust[x][y] -= d
 
     # 확산되는 미세먼지 양으로 변경시킨다
     for i in range(R):
