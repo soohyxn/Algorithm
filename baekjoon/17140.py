@@ -1,4 +1,3 @@
-from cProfile import label
 from collections import Counter
 
 r, c, k = map(int, input().split())
