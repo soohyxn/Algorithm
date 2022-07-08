@@ -1,34 +1,33 @@
-from collections import defaultdict
-import sys, heapq
+import heapq, sys
 input = sys.stdin.readline
 
 V, E = map(int, input().split())
-start = int(input())
-graph = defaultdict(list)
-dist = [sys.maxsize for _ in range(V+1)]
+K = int(input())
+graph = [[] for _ in range(V+1)]
+dist = [1e9] * (V+1) # 각 노드의 최단거리
 
 for _ in range(E):
     u, v, w = map(int, input().split())
-    graph[u].append((v, w))
+    graph[u].append([v, w])
 
 def dijkstra(start):
     queue = []
-    dist[start] = 0
-    heapq.heappush(queue, (0, start))
+    heapq.heappush(queue, [0, start])
+    dist[start] = 0 # 시작 노드
 
     while queue:
-        cur_dist, node = heapq.heappop(queue)
-        if cur_dist > dist[node]:
+        d, node = heapq.heappop(queue)
+        # 현재 노드가 이미 처리된 경우
+        if dist[node] < d:
             continue
-        for adj_node, adj_dist in graph[node]:
-            cost = cur_dist + adj_dist
-            if cost < dist[adj_node]:
-                dist[adj_node] = cost
-                heapq.heappush(queue, (cost, adj_node))
+        # 인접한 노드 확인
+        for i in graph[node]:
+            cost = d + i[1]
+            # 현재 노드를 거쳐가는 경우가 최단거리인 경우
+            if cost < dist[i[0]]:
+                dist[i[0]] = cost
+                heapq.heappush(queue, [cost, i[0]])
 
-dijkstra(start)
+dijkstra(K)
 for i in range(1, V+1):
-    if dist[i] == sys.maxsize:
-        print('INF')
-    else:
-        print(dist[i])
+    print(dist[i] if dist[i] != 1e9 else 'INF')
