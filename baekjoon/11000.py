@@ -2,17 +2,15 @@ import sys, heapq
 input = sys.stdin.readline
 
 N = int(input())
-time = [list(map(int, input().split())) for _ in range(N)]
-time.sort()
+classes = [list(map(int, input().split())) for _ in range(N)]
+classes.sort() # 시작시간 -> 끝시간 기준 정렬
 
-queue = []
-heapq.heappush(queue, time[0][1])
+heap = []
+heapq.heappush(heap, classes[0][1])
 
 for i in range(1, N):
-    if time[i][0] < queue[0]: # 현재 수업이 끝나는 시간보다 다음 수업 시작 시간이 빠르면
-        heapq.heappush(queue, time[i][1]) # 강의실 추가
-    else: # 현재 강의실에서 이어서 수업을 할 수 있다면
-        heapq.heappop(queue) # 현재 수업 제거
-        heapq.heappush(queue, time[i][1]) # 다음 수업 추가
+    if classes[i][0] >= heap[0]: # 현재 수업을 수업이 끝나는 강의실에서 이어서 할 수 있는 경우
+        heapq.heappop(heap)
+    heapq.heappush(heap, classes[i][1]) # 현재 수업 추가
 
-print(len(queue))
+print(len(heap))
