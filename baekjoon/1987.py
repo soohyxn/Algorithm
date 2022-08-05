@@ -1,22 +1,22 @@
 R, C = map(int, input().split())
-graph = [list(input()) for _ in range(R)]
-dx, dy = [0, 0, 1, -1], [1, -1, 0, 0]
+board = [list(input()) for _ in range(R)]
+dx, dy = [0, 1, 0, -1], [1, 0, -1, 0]
+ans = 1 # 지나갈 수 있는 최대 칸수
 
 def bfs(i, j):
-    queue = set([(i, j, graph[0][0])])
-    cnt = 0 # 지나갈 수 있는 최대 칸수
+    global ans
+    queue = set([(i, j, board[i][j])])
 
     while queue:
-        x, y, visited = queue.pop() # 현재 위치, 방문한 알파벳 리스트
-        cnt = max(cnt, len(visited)) # 최대칸수 구하기
+        x, y, visit = queue.pop()
         for i in range(4):
             nx = x + dx[i]
             ny = y + dy[i]
-            if 0 <= nx < R and 0 <= ny < C and graph[nx][ny] not in visited: # 범위 내에 있으며 아직 방문하지 않은 알파벳이라면 큐에 삽입
-                new_visited = visited + graph[nx][ny]
-                queue.add((nx, ny, new_visited))
-                
-    return cnt
+            # 이동 가능한 범위이며 지나온 알파벳인 아닌 경우 이동한다
+            if 0 <= nx < R and 0 <= ny < C and board[nx][ny] not in visit:
+                new_visit = visit + board[nx][ny]
+                queue.add((nx, ny, new_visit))
+                ans = max(ans, len(new_visit))
 
-answer = bfs(0, 0)
-print(answer)
+bfs(0, 0)
+print(ans)
