@@ -1,25 +1,30 @@
 from collections import deque
 
 F, S, G, U, D = map(int, input().split())
-dist = [0] * (F+1)
+visited = [0] * (F+1)
 
 def bfs(start):
     queue = deque([[start, 0]])
-    dist[start] = 1
+    visited[start] = 1
 
     while queue:
-        x, count = queue.popleft()
+        x, cnt = queue.popleft() # 현재 층수, 누른 버튼수
+
+        # 스타트링크 위치(G층)인 경우
         if x == G:
-            return count
+            return cnt
 
-        if x + U <= F and not dist[x + U]:
-            queue.append([x + U, count + 1])
-            dist[x + U] = 1
-        if  x - D >= 1 and not dist[x - D]:
-            queue.append([x - D, count + 1])
-            dist[x - D] = 1
+        # 위로 U층 이동
+        if x + U <= F and not visited[x + U]:
+            queue.append([x + U, cnt + 1])
+            visited[x + U] = 1
 
+        # 아래로 D층 이동
+        if x - D >= 1 and not visited[x - D]:
+            queue.append([x - D, cnt + 1])
+            visited[x - D] = 1
+
+    # 엘리베이터로 이동 불가능한 경우
     return 'use the stairs'
 
-answer = bfs(S)
-print(answer)
+print(bfs(S))
