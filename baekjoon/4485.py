@@ -1,35 +1,37 @@
-import sys, heapq
+import heapq
 
-dx = [0, 0, -1, 1]
-dy = [1, -1, 0, 0]
-count = 1
+cnt = 1
+dx, dy = [0, 1, 0, -1], [1, 0, -1, 0] # 동남서북
 
 def dijkstra():
     queue = []
-    heapq.heappush(queue, (graph[0][0], 0, 0))
-    dist[0][0] = graph[0][0]
+    heapq.heappush(queue, (board[0][0], 0, 0))
+    dist[0][0] = board[0][0]
 
     while queue:
-        cur_dist, x, y = heapq.heappop(queue)
-        if cur_dist > dist[x][y]:
+        cur, x, y = heapq.heappop(queue) # 거리, 위치
+        # 현재 거리가 최단거리보다 더 길다면 넘어간다
+        if cur > dist[x][y]:
             continue
         for i in range(4):
-            xi = x + dx[i]
-            yi = y + dy[i]
-            if 0 <= xi < n and 0 <= yi < n:
-                cost = cur_dist + graph[xi][yi]
-                if cost < dist[xi][yi]:
-                    heapq.heappush(queue, (cost, xi, yi))
-                    dist[xi][yi] = cost
+            nx = x + dx[i]
+            ny = y + dy[i]
+            if 0 <= nx < n and 0 <= ny < n: # 이동가능한 범위에 있는 경우
+                next = cur + board[nx][ny]
+                # 다음 거리가 최단거리보다  짧다면 힙에 추가한다
+                if next < dist[nx][ny]:
+                    heapq.heappush(queue, (next, nx, ny))
+                    dist[nx][ny] = next
 
 while True:
     n = int(input())
-    if n == 0:
+
+    if n == 0: # 종료
         break
 
-    graph = [list(map(int, input().split())) for _ in range(n)]
-    dist = [[sys.maxsize] * n for _ in range(n)]
+    board = [list(map(int, input().split())) for _ in range(n)]
+    dist = [[1e9] * n for _ in range(n)]
 
     dijkstra()
-    print(f'Problem {count}: {dist[n-1][n-1]}')
-    count += 1
+    print(f'Problem {cnt}: {dist[n-1][n-1]}')
+    cnt += 1
