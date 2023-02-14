@@ -1,23 +1,25 @@
+from collections import defaultdict
+
 n = int(input())
-graph = [[] for i in range(n+1)]
+graph = defaultdict(list)
 visited = [0] * (n+1)
 ans = []
 
-# 숫자 연결관계 구하기
-for i in range(n):
-    num = int(input())
-    graph[num].append(i+1)
+# 숫자 연결 관계 찾기
+for i in range(1, n+1):
+    j = int(input())
+    graph[j].append(i)
 
-def dfs(node):
-    for j in graph[node]:
-        if visited[j]:
-            ans.append(j)
-        else: # 사이클이 존재하면 조건에 해당하는 집합이다
-            visited[j] = 1
-            dfs(j)
-            visited[j] = 0
+def dfs(num):
+    for next in graph[num]:
+        if visited[next]: # 사이클이 있다면 같은 집합이므로 저장
+            ans.append(next)
+        else: # 아니라면 계속 탐색
+            visited[next] = 1
+            dfs(next)
+            visited[next] = 0
 
-# 1부터 n까지 모든 숫자 탐색
+# 모든 숫자 완전 탐색
 for i in range(1, n+1):
     if not visited[i]:
         visited[i] = 1
@@ -25,4 +27,4 @@ for i in range(1, n+1):
         visited[i] = 0
 
 print(len(ans))
-for a in ans: print(a)
+for i in ans: print(i)
