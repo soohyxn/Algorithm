@@ -1,30 +1,33 @@
 n = int(input())
-graph = [list(map(int, input())) for _ in range(n)]
+board = [list(map(int, input())) for _ in range(n)]
+dx, dy = [0, -1, 0, 1], [1, 0, -1, 0] # 동남서북
+count = 0 # 집의 수
 answer = []
-count = result = 0
-dx = [-1, 0, 1, 0]
-dy = [0, -1, 0, 1]
 
 def dfs(x, y):
-    if x <= -1 or x >= n or y <= -1 or y >= n:
+    # 지도의 범위를 벗어나면 넘어간다
+    if x < 0 or x >= n or y < 0 or y >= n:
         return False
-
-    if graph[x][y] == 1:
+    
+    # 집이 있는 곳이면 방문한다
+    if board[x][y] == 1:
         global count
         count += 1
-        graph[x][y] = 0
+        board[x][y] = -1 # 방문 처리
+        # 4방향 탐색
         for i in range(4):
             dfs(x + dx[i], y + dy[i])
         return True
+    
     return False
 
 for i in range(n):
     for j in range(n):
-        if dfs(i, j) == True:
-            answer.append(count)
-            result += 1
-            count = 0
+        if board[i][j] == 1:
+            if dfs(i, j):
+                answer.append(count)
+                count = 0
 
 answer.sort()
-print(result)
-print(*answer)     
+print(len(answer))
+print(*answer)
