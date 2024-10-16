@@ -1,35 +1,41 @@
 from collections import deque
 
-M, N = map(int, input().split())
-board = [list(map(int, input().split())) for _ in range(N)]
+m, n = map(int, input().split())
+graph = [list(map(int, input().split())) for _ in range(n)]
 dx, dy = [0, 1, 0, -1], [1, 0, -1, 0] # 동남서북
-queue = deque()
-ans = 0
+queue = deque([])
+answer = 0
 
-# 토마토 위치 큐에 삽입
-for i in range(N):
-    for j in range(M):
-        if board[i][j] == 1:
+# 모든 토마토 위치 큐에 넣기 (시작 위치들로부터 인접한 위치가 동시에 영향을 받음)
+for i in range(n):
+    for j in range(m):
+        if graph[i][j] == 1:
             queue.append([i, j])
 
-# 인접한 토마토 익기
-def bfs():
-    while queue:
-        x, y = queue.popleft()
-        for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
-            if 0 <= nx < N and 0 <= ny < M and board[nx][ny] == 0: # 범위 내에 있으며 안 익은 토마토인 경우
-                queue.append([nx, ny])
-                board[nx][ny] = board[x][y] + 1
+# dfs로 모든 토마토가 익을 최소 날짜 구하기
+while queue:
+    x, y = queue.popleft()
 
-bfs()
-# 토마토가 모두 익을 최소 날짜 구하기
-for i in range(N):
-    for j in range(M):
-        if board[i][j] == 0:
+    # 4방향 탐색
+    for i in range(4):
+        xi = x + dx[i]
+        yi = y + dy[i]
+
+        # 상자의 범위를 벗어나면 넘어간다
+        if xi < 0 or xi >= n or yi < 0 or yi >= m:
+            continue
+
+        # 아직 익지 않은 토마토라면 방문한다
+        if graph[xi][yi] == 0:
+            queue.append([xi, yi])
+            graph[xi][yi] = graph[x][y] + 1
+
+for i in range(n):
+    for j in range(m):
+        # 익지 않은 토마토가 있는 경우 모든 토마토가 익지 못하는 상황이므로 -1 리턴
+        if graph[i][j] == 0:
             print(-1)
             exit(0)
-        ans = max(ans, board[i][j])
+        answer = max(answer, graph[i][j])
 
-print(ans - 1)
+print(answer - 1)
