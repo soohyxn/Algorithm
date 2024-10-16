@@ -1,30 +1,30 @@
 from collections import deque
 
-F, S, G, U, D = map(int, input().split())
-visited = [0] * (F+1)
+f, s, g, u, d = map(int, input().split())
+visited = [0] * (f+1)
 
 def bfs(start):
     queue = deque([[start, 0]])
     visited[start] = 1
 
     while queue:
-        x, cnt = queue.popleft() # 현재 층수, 누른 버튼수
+        v, cnt = queue.popleft() # 현재 위치, 누른 버튼 수
 
-        # 스타트링크 위치(G층)인 경우
-        if x == G:
+        # G층에 도착하면 종료
+        if v == g:
             return cnt
-
-        # 위로 U층 이동
-        if x + U <= F and not visited[x + U]:
-            queue.append([x + U, cnt + 1])
-            visited[x + U] = 1
-
-        # 아래로 D층 이동
-        if x - D >= 1 and not visited[x - D]:
-            queue.append([x - D, cnt + 1])
-            visited[x - D] = 1
-
-    # 엘리베이터로 이동 불가능한 경우
+        
+        # 위로 U층 이동할 수 있는 경우
+        if v + u <= f and not visited[v + u]:
+            queue.append([v + u, cnt + 1])
+            visited[v + u] = 1
+        
+        # 아래로 D층 이동할 수 있는 경우
+        if v - d >= 1 and not visited[v - d]:
+            queue.append([v - d, cnt + 1])
+            visited[v - d] = 1
+    
+    # 엘리베이터로 이동할 수 없는 경우
     return 'use the stairs'
 
-print(bfs(S))
+print(bfs(s))
