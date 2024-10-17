@@ -1,35 +1,45 @@
-N, M = map(int, input().split())
-r, c, d= map(int, input().split())
-board = [list(map(int, input().split())) for _ in range(N)]
+n, m = map(int, input().split())
+r, c, d = map(int, input().split())
+board = [list(map(int, input().split())) for _ in range(n)]
 dx, dy = [-1, 0, 1, 0], [0, 1, 0, -1] # 북동남서
-ans = 0 # 청소하는 칸의 개수
+answer = 0
 
-def clean(x, y, d):
-    global ans
+def clean(x, y, z):
+    global answer
 
-    # 현재 위치를 청소한다
+    # 1. 현재 칸이 아직 청소되지 않은 경우, 현채 칸을 청소한다
     if board[x][y] == 0:
         board[x][y] = 2
-        ans += 1
-
-    # 현재 위치에서 인접한 칸을 탐색한다
-    for _ in range(4):
-        nd = (d + 3) % 4
-        nx = x + dx[nd]
-        ny = y + dy[nd]
-        # 현재 위치의 바로 왼쪽에 아직 청소하지 않은 빈 공간이 존재한다면, 왼쪽 방향으로 회전한 다음 한 칸을 전진한다
-        if 0 <= nx < N and 0 <= ny < M and board[nx][ny] == 0:
-            clean(nx, ny, nd)
-            return
-        d = nd # 그렇지 않을 경우, 왼쪽 방향으로 회전한다
+        answer += 1
     
-    # 2-a번 단계가 연속으로 네 번 실행되었을 경우
-    bd = (d + 2) % 4
-    bx = x + dx[bd]
-    by = y + dy[bd]
-    if board[bx][by] == 1: # 뒤쪽이 벽이라면 작동을 멈춘다
+    # 3. 현재 칸의 주변 4칸 중 청소되지 않은 빈 칸이 있는 경우
+    for _ in range(4):
+        zd = (z + 3) % 4
+        xd = x + dx[zd]
+        yd = y + dy[zd]
+        
+        if xd < 0 or xd >= n or yd < 0 or yd >= m:
+            continue
+        
+        # 3-1. 반시계 방향으로 90도 회전한다
+        z = zd
+
+        # 3-2. 앞쪽 칸이 청소되지 않은 빈 칸인 경우, 한 칸 전진한다
+        if board[xd][yd] == 0:
+            clean(xd, yd, zd)
+            return
+    
+    # 2. 현재 칸의 주변 4칸 중 청소되지 않은 빈 칸이 없는 경우
+    zb = (z + 2) % 4
+    xb = x + dx[zb]
+    yb = y + dy[zb]
+
+    # 2-2. 뒤쪽 칸이 벽이라 후진할 수 없다면 작동을 멈춘다
+    if board[xb][yb] == 1:
         return
-    clean(bx, by, d) # 그렇지 않다면, 한 칸 후진한다
+    # 2-1. 한 칸 후진할 수 있다면 한 칸 후진한다
+    else:
+        clean(xb, yb, z)
 
 clean(r, c, d)
-print(ans)
+print(answer)
