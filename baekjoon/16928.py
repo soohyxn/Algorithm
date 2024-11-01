@@ -1,41 +1,42 @@
 from collections import deque
 
-N, M = map(int, input().split())
-snakes, ladders = {}, {}
-dist = [0] * 101 # 각 위치의 주사위를 굴리는 최소 횟수
+n, m = map(int, input().split())
+ladder, snake = {}, {} # 사다리와 뱀의 위치
+dist = [-1] * 101 # 주사위를 굴리는 최소값 리스트
 
-for _ in range(N):
+for _ in range(n):
     x, y = map(int, input().split())
-    snakes[x] = y
+    ladder[x] = y
 
-for _ in range(M):
+for _ in range(m):
     u, v = map(int, input().split())
-    ladders[u] = v
+    snake[u] = v
 
 def bfs(start):
     queue = deque([start])
-    visited = [0] * 101
-    visited[1] = 1
+    dist[start] = 0
 
     while queue:
-        now = queue.popleft() # 현재 위치
-        # 주사위를 굴린다
-        for num in range(1, 7):
-            move = now + num # 이동 위치
-            if 1 <= move <= 100 and not visited[move]:
-                # 뱀이 있는 칸인 경우
-                if move in snakes.keys():
-                    move = snakes[move]
-                
-                # 사다리가 있는 칸인 경우
-                if move in ladders.keys():
-                    move = ladders[move]
+        cur = queue.popleft()
 
-                # 아직 방문하지 않았다면 이동
-                if not visited[move]:
-                    queue.append(move)
-                    visited[move] = 1
-                    dist[move] = dist[now] + 1
+        # 주사위를 굴린다
+        for i in range(1, 7):
+            next = cur + i
+
+            # 보드판 범위를 벗어나거나 이미 방문한 경우 넘어간다
+            if next < 1 or next > 100 or dist[next] >= 0:
+                continue
+
+            if next in ladder:
+                next = ladder[next]
+            
+            if next in snake:
+                next = snake[next]
+            
+            # 아직 방문하지 않은 경우 사다리 or 뱀을 통해 이동한다
+            if dist[next] < 0:
+                queue.append(next)
+                dist[next] = dist[cur] + 1
 
 bfs(1)
 print(dist[100])
